@@ -17,7 +17,7 @@
 (tests
   ;; (hyperfiddle.rcf/enable!)
   (str (parse-float "22.2")) := "22.2"
-  (parse-float "22.2x")
+  ;; (parse-float "22.2x")
   ;; (parse-float "c22.2")
   "done"
   )
