@@ -10,4 +10,5 @@
 (defn release [{:keys []}]
   (kb/assert-git-clean)
   (kb/assert-deps-edn-has-no-local-deps!)
+  (kb/run-tests)
   )
