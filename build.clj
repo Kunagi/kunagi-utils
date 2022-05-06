@@ -11,4 +11,6 @@
   (kb/assert-git-clean)
   (kb/assert-deps-edn-has-no-local-deps!)
   (kb/run-tests)
+  (kb/git-tag-with-version!)
+  (kb/bump-version--bugfix!)
   )
