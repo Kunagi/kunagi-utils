@@ -1,0 +1,3 @@
+#!/bin/bash -e
+
+gnome-terminal --window --title "Kunagi MUI shadow-cljs" -- bin/shadow-watch

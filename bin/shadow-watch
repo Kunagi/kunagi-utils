@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+# date -Iminutes > src/spa/version-time.txt
+# touch src/gcf-tap.edn
+clojure -M:shadow-cljs watch spa

@@ -1,0 +1,31 @@
+{:paths ["src"]
+ :deps  {org.clojure/clojurescript {:mvn/version "1.10.891"}
+
+         ;; io.github.kunagi/kunagi-build {:git/sha "79bf7fc4e252d62cdbe013471103c4a73f3320dd"}
+         ;; io.github.kunagi/kunagi-build {:local/root "../kunagi-build"}
+         ;;
+
+         funcool/promesa {:mvn/version "8.0.446"}
+         org.flatland/ordered {:mvn/version "1.15.10"}
+         }
+
+ :aliases
+ {;; Run with clj -T:build <function-in-build>
+  :build {:paths ["src"]
+          :deps {;;
+                 ;; io.github.kunagi/kunagi-build {:git/sha "79bf7fc4e252d62cdbe013471103c4a73f3320dd"}
+                 io.github.kunagi/kunagi-build {:local/root "../kunagi-build"}
+                 ;; io.github.clojure/tools.build {:git/tag "v0.8.1" :git/sha "7d40500"}
+                 ;;
+                 }
+          :ns-default build}
+
+  :shadow-cljs
+  {:extra-deps  {thheller/shadow-cljs {:mvn/version "2.16.4"}
+                 binaryage/devtools   {:mvn/version "1.0.4"}
+                 cider/cider-nrepl    {:mvn/version "RELEASE"}
+                 refactor-nrepl/refactor-nrepl {:mvn/version "RELEASE"}}
+   :main-opts   ["-m" "shadow.cljs.devtools.cli"]}
+
+  ;;
+  }}
