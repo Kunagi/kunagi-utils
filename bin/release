@@ -1,10 +1,11 @@
 #!/bin/bash -e
 
-git push --set-upstream origin release
+git push
 
 rm -rf release
 git clone . release --branch release
 cd release
+git merge origin/main
 clojure -T:build release
 
 cd ..
