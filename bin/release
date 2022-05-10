@@ -8,4 +8,4 @@ cd release
 clojure -T:build release
 
 cd ..
-git pull
+git merge release
