@@ -1,3 +1,11 @@
 #!/bin/bash -e
 
+git push
+
+rm -rf release
+git clone . release
+cd release
 clojure -T:build release
+
+cd ..
+git pull
