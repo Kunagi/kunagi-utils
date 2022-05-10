@@ -7,6 +7,10 @@
    [kunagi.build.api :as kb :refer [print-task print-done print-debug]]
    ))
 
+(defn assert-git-clean [{:keys []}]
+  (kb/assert-git-clean)
+  )
+
 (defn release [{:keys []}]
   (kb/release! {})
   )
