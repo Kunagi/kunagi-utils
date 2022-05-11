@@ -3,11 +3,10 @@
   (:require
    [clojure.tools.build.api :as b]
 
-
-   [kunagi.build.api :as kb :refer [print-task print-done print-debug]]
+   [kunagi.build.api :as kb]
    ))
 
 (defn release [{:keys []}]
-  (kb/release-2 {:project 'kunagi-build})
-  (kb/release-2 {:project 'kunagi-utils})
+  (kb/release {:project 'kunagi-build})
+  (kb/release {:project 'kunagi-utils})
   )
