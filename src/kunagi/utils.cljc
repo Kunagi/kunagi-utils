@@ -1,6 +1,20 @@
 (ns kunagi.utils
   (:require
-   [hyperfiddle.rcf :refer [tests ! %]]))
+   [hyperfiddle.rcf :refer [tests ! %]]
+
+   [clojure.edn :as edn]
+   #?(:clj [clojure.pprint :refer [pprint]]
+      :cljs [cljs.pprint :refer [pprint]])
+   ))
+
+;; * EDN
+
+(defn ->edn [data]
+  (with-out-str (pprint data)))
+
+(defn read-edn [s]
+  (when s
+    (edn/read-string s)))
 
 ;; * numbers
 
