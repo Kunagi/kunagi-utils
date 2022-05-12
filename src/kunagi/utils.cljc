@@ -80,7 +80,7 @@
               :data (ex-data ex)
               :stacktrace (-> ^js ex .-stack)
               :cause (when-let [c (or (ex-cause ex)
-                                      (-> ex .-cause))]
+                                      (-> ^js ex .-cause))]
                        (error->data c))})
 
     (map? ex)
