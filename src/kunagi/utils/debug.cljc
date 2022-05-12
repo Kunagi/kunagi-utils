@@ -1,6 +1,8 @@
 (ns kunagi.utils.debug)
 
-(defonce ACTIVE (atom (boolean goog.DEBUG)))
+(defonce ACTIVE (atom (or #?(:cljs (boolean goog.DEBUG)
+                             :clj false)
+                          false)))
 
 (defn active?
   "If debug mode is currently active."
