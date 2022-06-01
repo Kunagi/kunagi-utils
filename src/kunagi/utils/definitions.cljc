@@ -26,8 +26,8 @@
                 (string? id)))
     (swap! DEFINITIONS assoc-in
            [type id]
-           (assoc definition
-                  :definition/type type))))
+           definition)
+    definition))
 
 #?(:clj
    (defn- complete-definition [definition sym type]
