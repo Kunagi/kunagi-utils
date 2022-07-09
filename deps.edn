@@ -1,6 +1,7 @@
 {:paths ["src"]
-
  :deps  {
+         ;; org.clojure/clojurescript {:mvn/version "1.11.60"}
+
          ;; io.github.kunagi/kunagi-build {:git/sha "79bf7fc4e252d62cdbe013471103c4a73f3320dd"}
          ;; io.github.kunagi/kunagi-build {:local/root "../kunagi-build"}
          ;;
@@ -26,7 +27,7 @@
          :main-opts ["-m" "kaocha.runner"]}
 
   :shadow-cljs
-  {:extra-deps  {thheller/shadow-cljs {:mvn/version "2.16.4"}
+  {:extra-deps  {thheller/shadow-cljs {:mvn/version "2.19.5"}
                  binaryage/devtools   {:mvn/version "1.0.4"}
                  cider/cider-nrepl    {:mvn/version "RELEASE"}
                  refactor-nrepl/refactor-nrepl {:mvn/version "RELEASE"}}
