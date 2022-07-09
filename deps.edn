@@ -1,6 +1,6 @@
 {:paths ["src"]
- :deps  {org.clojure/clojurescript {:mvn/version "1.10.891"}
 
+ :deps  {
          ;; io.github.kunagi/kunagi-build {:git/sha "79bf7fc4e252d62cdbe013471103c4a73f3320dd"}
          ;; io.github.kunagi/kunagi-build {:local/root "../kunagi-build"}
          ;;
