@@ -7,7 +7,6 @@
    [flatland.ordered.map :as ordered.map]
    [clojure.string :as str]))
 
-
 ;; * logging
 
 #?(:gcf
@@ -29,8 +28,8 @@
 
 #?(:clj
    (defn compiler-option [k]
-     (when-let [ENV (eval 'cljs.env/*compiler*)]
-       (get-in @ENV [:options k]))))
+     (when cljs.env/*compiler*
+       (get-in @cljs.env/*compiler* [:options k]))))
 
 (def col--kunagi "#8d6e63")
 (def col--app "#6d4c41")
@@ -96,14 +95,36 @@
        ; else
        `(log-with-println ~event ~event-data))))
 
+#?(:clj (defn data-kvs->data [data-kvs]
+          (when (seq data-kvs)
+            (->> data-kvs
+                 (partition 2)
+                 (map #(->> % (into [])))
+                 (into (ordered.map/ordered-map))))))
+
 #?(:clj
    (defmacro log [event-keyword & data-kvs]
-     (let [data (when data-kvs
-                  (->> data-kvs
-                       (partition 2)
-                       (map #(->> % (into [])))
-                       (into (ordered.map/ordered-map))))]
+     (let [data (data-kvs->data data-kvs)]
        (->log-expr event-keyword data))))
+
+(defonce REPORT_ERROR_F (atom (fn [event-keyword data-kvs]
+                                (tap> {:error-event event-keyword
+                                       :data data-kvs}))))
+
+(defn report-error [event-keyword data-kvs]
+  (try
+    (@REPORT_ERROR_F event-keyword data-kvs)
+    (catch #?(:cljs :default :clj Throwable) ex
+      (prn "ERROR calling kunagi.utils.logging/REPORT_ERROR_F")
+      (prn ex)
+      (prn event-keyword data-kvs))))
+
+#?(:clj
+   (defmacro log-error [event-keyword & data-kvs]
+     (let [data (data-kvs->data data-kvs)]
+       `(do
+          (report-error ~event-keyword ~data)
+          (log ~event-keyword ~@data-kvs)))))
 
 ;; * tap
 
