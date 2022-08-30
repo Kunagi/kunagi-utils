@@ -1,4 +1,5 @@
 (ns kunagi.utils
+  #?(:cljs (:require-macros [kunagi.utils :refer [try>]]))
   (:require
    [hyperfiddle.rcf :refer [tests ! %]]
 
@@ -99,7 +100,7 @@
        {:message "JavaScript Object"
         :type :js-object
         :data (-> ex
-                  js->clj) })
+                  js->clj)})
 
     :else
     {:data (->edn ex)}))
@@ -125,3 +126,26 @@
     (str (error-user-message cause)
          " ➤ " (-> error :message))
     (-> error :message)))
+
+;; * try>
+
+#?(:clj
+   (defmacro try> [expr & [catch-f]]
+     (let [expr-code (->edn expr)
+           ;; catch-f-expr (when catch-f
+           ;;                `(~catch-f))
+           ]
+       `(try (-> ~expr
+                 (.catch (fn [error#]
+                           (let [catch-f# ~catch-f]
+                             (when catch-f# (catch-f# error# {:expr ~expr-code}))
+                         ;; (log-error ::try>--failed
+                         ;;            :promise promise
+                         ;;            :error (u/error->data error))
+                             {:error error#
+                              :expr  ~expr-code}))))
+             (catch :default error#
+               (let [catch-f# ~catch-f]
+                 (when catch-f# (catch-f# error# {:expr ~expr-code}))
+                 (js/Promise.resolve {:error error#
+                                      :expr ~expr-code})))))))
