@@ -28,8 +28,8 @@
 
 #?(:clj
    (defn compiler-option [k]
-     (when cljs.env/*compiler*
-       (get-in @cljs.env/*compiler* [:options k]))))
+     (when-let [ENV (eval 'cljs.env/*compiler*)]
+       (get-in @ENV [:options k]))))
 
 (def col--kunagi "#8d6e63")
 (def col--app "#6d4c41")
