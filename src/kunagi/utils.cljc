@@ -149,3 +149,9 @@
                  (when catch-f# (catch-f# error# {:expr ~expr-code}))
                  (js/Promise.resolve {:error error#
                                       :expr ~expr-code})))))))
+#?(:cljs
+   (defn later> [wait-millis f]
+     (js/Promise.
+      (fn [resolve _]
+        (js/setTimeout #(resolve (f))
+                       wait-millis)))))
