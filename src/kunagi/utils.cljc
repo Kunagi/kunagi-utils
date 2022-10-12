@@ -5,7 +5,8 @@
 
    [clojure.edn :as edn]
    #?(:clj [clojure.pprint :refer [pprint]]
-      :cljs [cljs.pprint :refer [pprint]])))
+      :cljs [cljs.pprint :refer [pprint]])
+   ))
 
 ;; * EDN
 
