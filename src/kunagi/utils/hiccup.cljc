@@ -22,6 +22,10 @@
     (nil? thing)
     ""
 
+    (and (vector? thing)
+         (-> thing first (= :html>)))
+    (second thing)
+
     (vector? thing)
     (let [[tag & args] thing
           _ (assert (simple-keyword? tag))
