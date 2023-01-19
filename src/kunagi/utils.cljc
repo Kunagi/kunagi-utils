@@ -1,12 +1,21 @@
 (ns kunagi.utils
   #?(:cljs (:require-macros [kunagi.utils :refer [try>]]))
   (:require
-   [hyperfiddle.rcf :refer [tests ! %]]
-
+   [clojure.string :as str]
    [clojure.edn :as edn]
    #?(:clj [clojure.pprint :refer [pprint]]
       :cljs [cljs.pprint :refer [pprint]])
+
+   [hyperfiddle.rcf :refer [tests ! %]]
+
    ))
+
+;; * strings
+
+(defn non-blank-string [s]
+  (when (string? s)
+    (when-not (str/blank? s)
+      s)))
 
 ;; * EDN
 
