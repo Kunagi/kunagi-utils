@@ -3,6 +3,7 @@
 
   (:require
    [promesa.core :as p]
+   [kunagi.utils :as u]
    #?(:clj [clojure.pprint :refer [pprint]]
       :cljs [cljs.pprint :refer [pprint]])))
 
@@ -14,15 +15,26 @@
   (assert (string? var-name))
   (assert (fn? f))
   (let [id (str ns-name "/" var-name)
+        bindings-form-before (get-in @RCTS [id :bindings-form])
+        bindings-form-changed? (not= bindings-form bindings-form-before)
+        _ (tap> [:changed? bindings-form-changed?
+                 bindings-form bindings-form-before])
+        tsm (u/current-time-millis)
         rct {:id id
              :f f
-             :bindings-form bindings-form}]
+             :bindings-form bindings-form
+             :tsm-def tsm
+             :tsm-def-changed (if bindings-form-changed?
+                                 tsm
+                                 (get-in @RCTS [id :tsm-def-changed]))}]
     (swap! RCTS assoc id rct)))
 
 (defn eval-rct> [rct]
   (p/let [f (-> rct :f)
           result (f)]
-    (assoc rct :result result)))
+    (assoc rct
+           :result result
+           :tsm-eval (u/current-time-millis))))
 
 #?(:clj
    (defmacro rct [sym let-expr]

@@ -165,3 +165,9 @@
       (fn [resolve _]
         (js/setTimeout #(resolve (f))
                        wait-millis)))))
+
+;; * time
+
+(defn current-time-millis []
+  #?(:cljs (-> (js/Date.) .getTime)
+     :clj (System/currentTimeMillis)))
