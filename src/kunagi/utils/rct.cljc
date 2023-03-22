@@ -3,9 +3,12 @@
 
   (:require
    [promesa.core :as p]
-   [kunagi.utils :as u]
    #?(:clj [clojure.pprint :refer [pprint]]
       :cljs [cljs.pprint :refer [pprint]])))
+
+(defn- current-time-millis []
+  #?(:cljs (-> (js/Date.) .getTime)
+     :clj (System/currentTimeMillis)))
 
 (defonce RCTS (atom {}))
 
@@ -19,7 +22,7 @@
         bindings-form-changed? (not= bindings-form bindings-form-before)
         _ (tap> [:changed? bindings-form-changed?
                  bindings-form bindings-form-before])
-        tsm (u/current-time-millis)
+        tsm (current-time-millis)
         rct {:id id
              :f f
              :bindings-form bindings-form
@@ -34,7 +37,7 @@
           result (f)]
     (assoc rct
            :result result
-           :tsm-eval (u/current-time-millis))))
+           :tsm-eval (current-time-millis))))
 
 #?(:clj
    (defmacro rct [sym let-expr]
@@ -61,25 +64,7 @@
                    (p/let ~elements
                      {:elements ~'elements
                       :DEBUG '~elements}))]
-          (add-rct ~ns-name ~var-name f# '~bindings)))
-     #_(let [expr-code (->edn expr)
-             ;; catch-f-expr (when catch-f
-             ;;                `(~catch-f))
-             ]
-         `(try (-> ~expr
-                   (.catch (fn [error#]
-                             (let [catch-f# ~catch-f]
-                               (when catch-f# (catch-f# error# {:expr ~expr-code}))
-                               ;; (log-error ::try>--failed
-                               ;;            :promise promise
-                               ;;            :error (u/error->data error))
-                               {:error error#
-                                :expr  ~expr-code}))))
-               (catch :default error#
-                 (let [catch-f# ~catch-f]
-                   (when catch-f# (catch-f# error# {:expr ~expr-code}))
-                   (js/Promise.resolve {:error error#
-                                        :expr ~expr-code})))))))
+          (add-rct ~ns-name ~var-name f# '~bindings)))))
 
 (prn "[rct] loading...")
 (rct test-1
