@@ -10,6 +10,22 @@
   #?(:cljs (-> (js/Date.) .getTime)
      :clj (System/currentTimeMillis)))
 
+
+(defonce AUTORUN (atom false))
+(defn autorun? [] @AUTORUN)
+
+(defn enable-autorun!
+  ([]
+   (enable-autorun! true))
+  ([autorun-on?]
+   (reset! AUTORUN autorun-on?)))
+
+#?(:clj
+   (defn- compiler-option [k]
+     (when cljs.env/*compiler*
+       (get-in @cljs.env/*compiler* [:options k]))))
+
+
 (defonce RCTS (atom {}))
 
 (defn add-rct [ns-name var-name f bindings-form]
