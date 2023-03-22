@@ -6,6 +6,8 @@
    #?(:clj [clojure.pprint :refer [pprint]]
       :cljs [cljs.pprint :refer [pprint]])
 
+   [promesa.exec :as px]
+
    [kunagi.utils.rct :refer [rct]]))
 
 ;; * strings
@@ -154,12 +156,8 @@
                  (when catch-f# (catch-f# error# {:expr ~expr-code}))
                  (js/Promise.resolve {:error error#
                                       :expr ~expr-code})))))))
-#?(:cljs
-   (defn later> [wait-millis f]
-     (js/Promise.
-      (fn [resolve _]
-        (js/setTimeout #(resolve (f))
-                       wait-millis)))))
+(defn later> [wait-millis f]
+  (px/schedule! wait-millis f))
 
 ;; * time
 
