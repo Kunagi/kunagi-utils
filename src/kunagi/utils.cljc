@@ -6,9 +6,11 @@
    #?(:clj [clojure.pprint :refer [pprint]]
       :cljs [cljs.pprint :refer [pprint]])
 
+   [promesa.core :as p]
    [promesa.exec :as px]
 
-   [kunagi.utils.rct :refer [rct]]))
+   [kunagi.utils.rct :refer [rct]]
+   [kunagi.utils :as u]))
 
 ;; * strings
 
@@ -157,7 +159,18 @@
                  (js/Promise.resolve {:error error#
                                       :expr ~expr-code})))))))
 (defn later> [wait-millis f]
-  (px/schedule! wait-millis f))
+  (p/create (fn [resolve reject]
+              (px/schedule! wait-millis
+                            (fn []
+                              (try
+                                (resolve (f))
+                                (catch :exception ex
+                                  (reject ex))))))))
+
+(rct later>-test
+     (let [*1 (later> 100 (fn [] 42))
+           _ (assert (= *1 42))])
+     )
 
 ;; * time
 
