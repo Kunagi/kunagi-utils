@@ -20,10 +20,10 @@
   ([autorun-on?]
    (reset! AUTORUN autorun-on?)))
 
-#?(:clj
-   (defn- compiler-option [k]
-     (when cljs.env/*compiler*
-       (get-in @cljs.env/*compiler* [:options k]))))
+;; #?(:clj
+;;    (defn- compiler-option [k]
+;;      (when cljs.env/*compiler*
+;;        (get-in @cljs.env/*compiler* [:options k]))))
 
 
 (defonce RCTS (atom {}))
