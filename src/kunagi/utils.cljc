@@ -164,7 +164,7 @@
                             (fn []
                               (try
                                 (resolve (f))
-                                (catch :exception ex
+                                (catch #?(:cljs :exception :clj Exception) ex
                                   (reject ex))))))))
 
 (rct later>-test
