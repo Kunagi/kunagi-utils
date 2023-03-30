@@ -1,16 +1,14 @@
 (ns kunagi.utils
   #?(:cljs (:require-macros [kunagi.utils :refer [try>]]))
   (:require
-   [clojure.string :as str]
-   [clojure.edn :as edn]
    #?(:clj [clojure.pprint :refer [pprint]]
       :cljs [cljs.pprint :refer [pprint]])
-
-   [promesa.core :as p]
-   [promesa.exec :as px]
-
+   [clojure.edn :as edn]
+   [clojure.string :as str]
+   [kunagi.utils :as u]
    [kunagi.utils.rct :refer [rct]]
-   [kunagi.utils :as u]))
+   [promesa.core :as p]
+   [promesa.exec :as px]))
 
 ;; * strings
 
@@ -158,6 +156,7 @@
                  (when catch-f# (catch-f# error# {:expr ~expr-code}))
                  (js/Promise.resolve {:error error#
                                       :expr ~expr-code})))))))
+
 (defn later> [wait-millis f]
   (p/create (fn [resolve reject]
               (px/schedule! wait-millis

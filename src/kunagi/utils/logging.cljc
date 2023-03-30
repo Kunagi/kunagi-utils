@@ -4,8 +4,8 @@
    #?(:gcf ["firebase-functions" :as firebase-functions])
    #?(:cljs [cljs.pprint :as pprint]
       :clj [clojure.pprint :as pprint])
-   [flatland.ordered.map :as ordered.map]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [flatland.ordered.map :as ordered.map]))
 
 ;; * logging
 

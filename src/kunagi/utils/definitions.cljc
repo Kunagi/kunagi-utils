@@ -1,6 +1,4 @@
-(ns kunagi.utils.definitions
-  (:require
-   [kunagi.utils :as u]))
+(ns kunagi.utils.definitions)
 
 (defonce DEFINITIONS (atom {}))
 
