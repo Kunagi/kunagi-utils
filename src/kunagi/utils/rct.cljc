@@ -36,8 +36,8 @@
   (let [id (str ns-name "/" var-name)
         bindings-form-before (get-in @RCTS [id :bindings-form])
         bindings-form-changed? (not= bindings-form bindings-form-before)
-        _ (tap> [:changed? bindings-form-changed?
-                 bindings-form bindings-form-before])
+        ;; _ (tap> [:changed? bindings-form-changed?
+        ;;          bindings-form bindings-form-before])
         tsm (current-time-millis)
         rct {:id id
              :f f
