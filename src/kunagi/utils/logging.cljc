@@ -24,6 +24,10 @@
 (defn log-with-println [event event-data]
   (println event (when event-data (with-out-str (pprint/pprint event-data)))))
 
+(defn log-with-console [event event-data]
+  #?(:clj (log-with-println event event-data)
+     :cljs (js/console.log event event-data)))
+
 ;; * log macro
 
 #?(:clj
@@ -93,7 +97,8 @@
            ~@[event-data]))
 
        ; else
-       nil
+       `(log-with-console ~event ~event-data)
+       ;; nil
        ;; `(log-with-println ~event ~event-data)
        )))
 
