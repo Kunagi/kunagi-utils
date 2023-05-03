@@ -93,7 +93,9 @@
            ~@[event-data]))
 
        ; else
-       `(log-with-println ~event ~event-data))))
+       nil
+       ;; `(log-with-println ~event ~event-data)
+       )))
 
 #?(:clj (defn data-kvs->data [data-kvs]
           (when (seq data-kvs)
