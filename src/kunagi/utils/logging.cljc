@@ -7,7 +7,7 @@
    [clojure.string :as str]
    [flatland.ordered.map :as ordered.map]))
 
-;; * logging
+;;; logging
 
 #?(:gcf
    (defn log-with-gcf [event event-data]
@@ -31,7 +31,7 @@
                              (clj->js event-data))
              (js/console.log (str (namespace event) "/" (name event))))))
 
-;; * log macro
+;;; log macro
 
 #?(:clj
    (defn compiler-option [k]
@@ -65,15 +65,15 @@
        :js-console
        (if event-data
          `(.log js/console
-                "--->"
+                "\n***>"
                 ~(namespace event) " " ~(name event)
-                "  <---"
+                "  <***"
                 "\n"
-                (with-out-str (cljs.pprint/pprint ~event-data)))
+                (cljs.core/clj->js ~event-data))
          `(.log js/console
-                "--->"
+                "***>"
                 ~(namespace event) " " ~(name event)
-                "  <---"))
+                "  <***"))
 
        :browser-console
        (let [css--ns (if (or (-> event namespace (str/starts-with? "kunagi."))
@@ -99,7 +99,7 @@
            ~@(when exception [css--exception "\n" exception "\n"])
            ~@[event-data]))
 
-       ; else
+                                        ; else
        `(log-with-console ~event ~event-data)
        ;; nil
        ;; `(log-with-println ~event ~event-data)
@@ -136,7 +136,7 @@
           (report-error ~event-keyword ~data)
           (log ~event-keyword ~@data-kvs)))))
 
-;; * tap
+;;; tap
 
 (defonce TAP (atom nil))
 
@@ -155,7 +155,7 @@
    (when goog.DEBUG
      (install-tap)))
 
-;; * ---
+;;; ---
 
 (comment
   (log ::with-message
