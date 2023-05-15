@@ -158,6 +158,7 @@
                                       :expr ~expr-code})))))))
 
 (defn later> [wait-millis f]
+  (assert (fn? f))
   (p/create (fn [resolve reject]
               (px/schedule! wait-millis
                             (fn []
