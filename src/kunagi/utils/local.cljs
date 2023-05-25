@@ -57,7 +57,7 @@
    (textc @LANG opts texts))
   ([lang opts texts]
    (if-not (map? texts)
-     (str texts)
+     texts
      (let [v (or (get texts lang)
                  (get texts @FALLBACK_LANG))]
        (cond
