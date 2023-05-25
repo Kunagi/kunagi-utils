@@ -56,15 +56,20 @@
   ([opts texts]
    (textc @LANG opts texts))
   ([lang opts texts]
-   (if-not (map? texts)
-     texts
+   (cond
+     (map? texts)
      (let [v (or (get texts lang)
                  (get texts @FALLBACK_LANG))]
        (cond
          (nil? v) nil
          (fn? v) (v opts)
          (string? v) v
-         :else (str v))))))
+         :else (str v)))
+
+     (nil? texts) nil
+     (keyword? texts) (name texts)
+     (sequential? texts) (->> texts (str/join " "))
+     :else texts)))
 
 
 (def texts--de
