@@ -61,6 +61,7 @@
      (let [v (or (get texts lang)
                  (get texts @FALLBACK_LANG))]
        (cond
+         (nil? v) nil
          (fn? v) (v opts)
          (string? v) v
          :else (str v))))))
