@@ -21,7 +21,7 @@
                  :ns (namespace event)
                  :event (name event)
                  :data event-data}))
-       (catch :default _err
+       (catch :default err
          (.write ^js (.-logger firebase-functions)
                  (clj->js
                   {:severity "DEBUG"
@@ -30,7 +30,7 @@
                                  (name event))
                    :ns (namespace event)
                    :event (name event)
-                   :data (str event-data)}))))))
+                   :logging-error err}))))))
 
 (defn log-with-println [event event-data]
   (println event (when event-data (with-out-str (pprint/pprint event-data)))))
