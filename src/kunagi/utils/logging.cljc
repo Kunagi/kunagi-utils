@@ -15,8 +15,8 @@
        (.write ^js (.-logger firebase-functions)
                (clj->js
                 {:severity (if (-> event-data :error)
-                             "DEBUG"
-                             "ERROR")
+                             "ERROR"
+                             "DEBUG")
                  :message (str (namespace event)
                                " | "
                                (name event))
@@ -27,8 +27,8 @@
          (.write ^js (.-logger firebase-functions)
                  (clj->js
                   {:severity (if (-> event-data :error)
-                               "DEBUG"
-                               "ERROR")
+                               "ERROR"
+                               "DEBUG")
                    :message (str (namespace event)
                                  " | "
                                  (name event))
