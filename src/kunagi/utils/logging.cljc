@@ -14,7 +14,9 @@
      (try
        (.write ^js (.-logger firebase-functions)
                (clj->js
-                {:severity "DEBUG"
+                {:severity (if (-> event-data :error)
+                             "DEBUG"
+                             "ERROR")
                  :message (str (namespace event)
                                " | "
                                (name event))
@@ -24,7 +26,9 @@
        (catch :default err
          (.write ^js (.-logger firebase-functions)
                  (clj->js
-                  {:severity "DEBUG"
+                  {:severity (if (-> event-data :error)
+                               "DEBUG"
+                               "ERROR")
                    :message (str (namespace event)
                                  " | "
                                  (name event))
@@ -38,8 +42,11 @@
 (defn log-with-console [event event-data]
   #?(:clj (log-with-println (str (namespace event) "/" (name event)) event-data)
      :cljs (if event-data
-             (js/console.log (str (namespace event) "/" (name event))
-                             (clj->js event-data))
+             (if (-> event-data :error)
+               (js/console.error (str (namespace event) "/" (name event))
+                                 (clj->js event-data))
+               (js/console.log (str (namespace event) "/" (name event))
+                               (clj->js event-data)))
              (js/console.log (str (namespace event) "/" (name event))))))
 
 ;;; log macro
