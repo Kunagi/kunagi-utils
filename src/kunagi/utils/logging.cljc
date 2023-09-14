@@ -11,15 +11,26 @@
 
 #?(:gcf
    (defn log-with-gcf [event event-data]
-     (.write ^js (.-logger firebase-functions)
-             (clj->js
-              {:severity "DEBUG"
-               :message (str (namespace event)
-                             " | "
-                             (name event))
-               :ns (namespace event)
-               :event (name event)
-               :data event-data}))))
+     (try
+       (.write ^js (.-logger firebase-functions)
+               (clj->js
+                {:severity "DEBUG"
+                 :message (str (namespace event)
+                               " | "
+                               (name event))
+                 :ns (namespace event)
+                 :event (name event)
+                 :data event-data}))
+       (catch :default _err
+         (.write ^js (.-logger firebase-functions)
+                 (clj->js
+                  {:severity "DEBUG"
+                   :message (str (namespace event)
+                                 " | "
+                                 (name event))
+                   :ns (namespace event)
+                   :event (name event)
+                   :data (str event-data)}))))))
 
 (defn log-with-println [event event-data]
   (println event (when event-data (with-out-str (pprint/pprint event-data)))))
