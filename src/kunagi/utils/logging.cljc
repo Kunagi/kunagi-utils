@@ -12,29 +12,41 @@
 #?(:gcf
    (defn log-with-gcf [event event-data]
      (try
-       (.write ^js (.-logger firebase-functions)
-               (clj->js
-                {:severity (if (-> event-data :error)
-                             "ERROR"
-                             "DEBUG")
-                 :message (str (namespace event)
-                               " | "
-                               (name event))
-                 :ns (namespace event)
-                 :event (name event)
-                 :data event-data}))
-       (catch :default err
-         (.write ^js (.-logger firebase-functions)
+       (if-let [error (-> event-data :error)]
+         (.error ^js (.-logger firebase-functions)
+                 (str (namespace event)
+                      " | "
+                      (name event))
+                 error
                  (clj->js
-                  {:severity (if (-> event-data :error)
-                               "ERROR"
-                               "DEBUG")
-                   :message (str (namespace event)
-                                 " | "
-                                 (name event))
-                   :ns (namespace event)
+                  {:ns (namespace event)
                    :event (name event)
-                   :logging-error err}))))))
+                   :data (dissoc event-data :error)}))
+         (.debug ^js (.-logger firebase-functions)
+                 (str (namespace event)
+                      " | "
+                      (name event))
+                 (clj->js
+                  {:ns (namespace event)
+                   :event (name event)
+                   :data event-data})))
+       (catch :default err
+         (if-let [error (-> event-data :error)]
+           (.error ^js (.-logger firebase-functions)
+                   (str (namespace event)
+                        " | "
+                        (name event))
+                   error
+                   (clj->js
+                    {:ns (namespace event)
+                     :event (name event)}))
+           (.debug ^js (.-logger firebase-functions)
+                   (str (namespace event)
+                        " | "
+                        (name event))
+                   (clj->js
+                    {:ns (namespace event)
+                     :event (name event)})))))))
 
 (defn log-with-println [event event-data]
   (println event (when event-data (with-out-str (pprint/pprint event-data)))))
