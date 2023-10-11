@@ -9,7 +9,7 @@
 
 (defn escape-html [context s]
   (if s
-    #?(:cljs (gstring/htmlEscape s)
+    #?(:cljs (gstring/htmlEscape (str s))
        :clj s) ;; FIXME
     ""))
 
