@@ -35,13 +35,20 @@
 
 (defn format-decimal
   ([v]
-   (when v
-     (format-decimal @LANG v)))
-  ([lang v]
+   (when v (format-decimal @LANG v)))
+
+  ([v fraction-digits]
+   (when v (format-decimal @LANG v fraction-digits)))
+
+  ([lang v fraction-digits]
    (when v
      (-> js/Intl
          (.NumberFormat (->js-locale-string lang)
-                        (clj->js {:style    "decimal"}))
+                        (clj->js {:style "decimal"
+                                  :minimumFractionDigits (when (int? fraction-digits)
+                                                           fraction-digits)
+                                  :maximumFractionDigits (when (int? fraction-digits)
+                                                           fraction-digits)}))
          (.format (cond
                     (number? v) v
                     :else v))))))
