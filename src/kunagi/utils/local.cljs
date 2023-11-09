@@ -35,7 +35,7 @@
 
 (defn format-decimal
   ([v]
-   (when v (format-decimal @LANG v)))
+   (when v (format-decimal @LANG v nil)))
 
   ([v fraction-digits]
    (when v (format-decimal @LANG v fraction-digits)))
