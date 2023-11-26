@@ -1,22 +1,17 @@
 (ns ctx
   (:require
-   [promesa.core :as p]))
-
-(defmulti custom-edn pr-str)
+   [promesa.core :as p]
+   [kunagi.utils.logging :refer [log]]))
 
 (defrecord Ref [type id])
 
 (defn ref? [thing]
   (instance? Ref thing))
 
-(defrecord Ctx [])
+(defrecord Ctx [m])
 
 (defn ctx? [thing]
   (instance? Ctx thing))
-
-#_
-(defmethod custom-edn Ref [r]
-  (str "#ctx.Ref " (pr-str [(:type r) (:id r)])))
 
 (defmulti ref-resolve> (fn [ref ctx]
                          (-> ref :type)))
@@ -27,3 +22,15 @@
     (assert (ctx? ctx))
     (p/let [resolved (ref-resolve> ref ctx)]
       resolved)))
+
+;;; state atom
+
+(defonce CTX (atom nil))
+
+(defn update! [log-entry f]
+  (log ::update!
+       :log log-entry)
+  (swap! CTX (fn [ctx]
+               (let [new-ctx (f ctx)]
+                 (assert (ctx? new-ctx))
+                 new-ctx))))
