@@ -28,7 +28,7 @@
 (defonce CTX (atom nil))
 
 (defn update! [log-entry f]
-  (log ::update!
+  #_(log ::update!
        :log log-entry)
   (swap! CTX (fn [ctx]
                (let [new-ctx (f ctx)]
