@@ -5,7 +5,6 @@
       :cljs [cljs.pprint :refer [pprint]])
    [clojure.edn :as edn]
    [clojure.string :as str]
-   [kunagi.utils :as u]
    [kunagi.utils.rct :refer [rct]]
    [promesa.core :as p]
    [promesa.exec :as px]))
