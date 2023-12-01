@@ -190,7 +190,9 @@
    (let [file-path "src/texts_de.edn"]
      (defonce DE_TEXTS (do
                          (prn "[kunagi.utils/text] loading " file-path)
-                         (atom (read-edn (slurp file-path)))))
+                         (atom (try
+                                 (read-edn (slurp file-path))
+                                 (catch Exception _)))))
 
      (defn register-de-text [k text]
        (when (not= text (get @DE_TEXTS k))
@@ -203,5 +205,4 @@
        (assert (simple-keyword? k))
        (assert (string? de-text))
        (register-de-text k de-text)
-       `(get-text ~k ~de-text))
-     ))
+       `(get-text ~k ~de-text))))
