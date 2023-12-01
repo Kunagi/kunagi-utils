@@ -1,4 +1,5 @@
 (ns kunagi.utils
+  (:refer-clojure :exclude [text])
   #?(:cljs (:require-macros [kunagi.utils :refer [try>]]))
   (:require
    #?(:clj [clojure.pprint :refer [pprint]]
@@ -171,8 +172,36 @@
            _ (assert (= *1 42))])
      )
 
-;; * time
+;;; time
 
 (defn current-time-millis []
   #?(:cljs (-> (js/Date.) .getTime)
      :clj (System/currentTimeMillis)))
+
+;;; Texts
+
+
+(defonce LOCAL_TEXTS (atom {}))
+
+(defn get-text [k de-text]
+  (get @LOCAL_TEXTS k de-text))
+
+#?(:clj
+   (let [file-path "src/texts_de.edn"]
+     (defonce DE_TEXTS (do
+                         (prn "[kunagi.utils/text] loading " file-path)
+                         (atom (read-edn (slurp file-path)))))
+
+     (defn register-de-text [k text]
+       (when (not= text (get @DE_TEXTS k))
+         (do
+           (prn "[kunagi.utils/text] new text: " k text)
+           (swap! DE_TEXTS assoc k text)
+           (spit file-path (pr-str @DE_TEXTS)))))
+
+     (defmacro text [k de-text]
+       (assert (simple-keyword? k))
+       (assert (string? de-text))
+       (register-de-text k de-text)
+       `(get-text ~k ~de-text))
+     ))
