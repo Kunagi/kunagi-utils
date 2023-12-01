@@ -88,15 +88,17 @@
    (when k
      (let [v (get-in @TEXTS [lang k])]
        (cond
-         (nil? v)    (name k)
-         (fn? v)     (v opts)
+         (nil? v) nil
+         (fn? v) (v opts)
          (string? v) v
-         :else       (str v))))))
+         :else (str "?:" v ":?"))))))
 
 (comment
  (text :yes)
  (text :continue)
  (text nil))
+
+(defonce ON_TEXTC (atom nil))
 
 (defn textc
   ([texts]
@@ -109,6 +111,10 @@
    (cond
 
      (nil? texts) nil
+
+     (vector? texts) (if (= lang :de)
+                       (second texts)
+                       (text lang (-> texts first name keyword) opts))
 
      (map? texts)
      (let [v (or (get texts lang)
