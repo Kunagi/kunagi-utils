@@ -57,28 +57,6 @@
 
 ;;; text
 
-(defn textc
-  ([texts]
-   (textc @LANG nil texts))
-  ([opts texts]
-   (textc @LANG opts texts))
-  ([lang opts texts]
-   (cond
-     (map? texts)
-     (let [v (or (get texts lang)
-                 (get texts @FALLBACK_LANG))]
-       (cond
-         (nil? v) nil
-         (fn? v) (v opts)
-         (string? v) v
-         :else (str v)))
-
-     (nil? texts) nil
-     (keyword? texts) (name texts)
-     (sequential? texts) (->> texts (str/join " "))
-     :else texts)))
-
-
 (def texts--de
   {:yes "Ja"
    :no "Nein"
@@ -102,8 +80,10 @@
 (defn text
   ([k]
    (text @LANG k nil))
+
   ([k opts]
    (text @LANG k opts))
+
   ([lang k opts]
    (when k
      (let [v (get-in @TEXTS [lang k])]
@@ -118,12 +98,40 @@
  (text :continue)
  (text nil))
 
+(defn textc
+  ([texts]
+   (textc @LANG nil texts))
 
+  ([opts texts]
+   (textc @LANG opts texts))
 
-(defn ->text--yes-no [b]
-  (text (if b :yes :no)))
+  ([lang opts texts]
+   (cond
 
-;; * boolean
+     (nil? texts) nil
+
+     (map? texts)
+     (let [v (or (get texts lang)
+                 (text lang (:id texts) opts)
+                 (get texts @FALLBACK_LANG))]
+       (cond
+         (nil? v) nil
+         (fn? v) (v opts)
+         (string? v) v
+         :else (str v)))
+
+     (string? texts)
+     (do
+       #_(js/console.warn "TEXT string" texts)
+       texts)
+
+     (keyword? texts) (text lang texts opts)
+
+     (sequential? texts) (->> texts (str/join " "))
+
+     :else (str texts))))
+
+;;; boolean
 
 (defn format-yes-no
   ([b]
