@@ -183,8 +183,15 @@
 
 (defonce LOCAL_TEXTS (atom {}))
 
-(defn get-text [k de-text]
-  (get @LOCAL_TEXTS k de-text))
+(defn get-text [k de-text arg-map]
+  (when-let [s (get @LOCAL_TEXTS k de-text)]
+    (if-not arg-map
+      s
+      (->> arg-map
+           (reduce (fn [s [k v]]
+                     (str/replace s (str "$" (str/upper-case (name k)))
+                                  v))
+                   s)))))
 
 #?(:clj
    (let [file-path "src/texts_de.edn"]
@@ -201,8 +208,8 @@
            (swap! DE_TEXTS assoc k text)
            (spit file-path (pr-str @DE_TEXTS)))))
 
-     (defmacro text [k de-text]
+     (defmacro text [k de-text & [arg-map]]
        (assert (simple-keyword? k))
        (assert (string? de-text))
        (register-de-text k de-text)
-       `(get-text ~k ~de-text))))
+       `(get-text ~k ~de-text ~arg-map))))
