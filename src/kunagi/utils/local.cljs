@@ -126,6 +126,9 @@
          (string? v) v
          :else (str v)))
 
+     (fn? texts)
+     (texts opts)
+
      (string? texts)
      (do
        #_(js/console.warn "TEXT string" texts)
