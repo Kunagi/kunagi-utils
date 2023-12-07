@@ -206,7 +206,7 @@
          (do
            (prn "[kunagi.utils/text] new text: " k text)
            (swap! DE_TEXTS assoc k text)
-           (spit file-path (pr-str @DE_TEXTS)))))
+           (spit file-path (->edn @DE_TEXTS)))))
 
      (defmacro text [k de-text & [arg-map]]
        (assert (simple-keyword? k))
