@@ -127,12 +127,19 @@
   ;
   )
 
+(defn error-userfriendlyfy-message [s]
+  (when s
+    (->> s
+         str/split-lines
+         (remove #(str/starts-with? % "    at "))
+         (str/join "\n"))))
+
 (defn error-user-message [error]
   (assert (map? error))
   (if-let [cause (-> error :cause)]
     (str (error-user-message cause)
-         " ➤ " (-> error :message))
-    (-> error :message)))
+         " ➤ " (-> error :message error-userfriendlyfy-message))
+    (-> error :message error-userfriendlyfy-message)))
 
 ;; * try>
 
