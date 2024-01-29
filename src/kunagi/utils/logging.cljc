@@ -25,7 +25,9 @@
          (.debug ^js (.-logger firebase-functions)
                  (str (namespace event)
                       " | "
-                      (name event))
+                      (name event)
+                      (when-let [value (-> event-data :value)]
+                        (str " = " value)))
                  (clj->js
                   {:ns (namespace event)
                    :event (name event)
@@ -114,6 +116,7 @@
                           (-> event name (= "tap>")) (symbol "kunagi.utils.logging" "css--event--tap>")
                           :else (symbol "kunagi.utils.logging" "css--event--default"))
              exception (-> event-data :exception)
+             value (-> event-data :value)
              event-data (if exception
                           (dissoc event-data :exception)
                           event-data)
@@ -122,12 +125,20 @@
                              (when exception
                                (str "%c:exception")))]
 
-         `(.log
-           js/console
-           ~event-expr
-           ~css--ns ~css--event
-           ~@(when exception [css--exception "\n" exception "\n"])
-           ~@[event-data]))
+         (if value
+           `(.log
+             js/console
+             ~event-expr
+             ~css--ns ~css--event
+             (str ~value)
+             ~@(when exception [css--exception "\n" exception "\n"])
+             ~@[event-data])
+           `(.log
+             js/console
+             ~event-expr
+             ~css--ns ~css--event
+             ~@(when exception [css--exception "\n" exception "\n"])
+             ~@[event-data])))
 
                                         ; else
        `(log-with-console ~event ~event-data)
