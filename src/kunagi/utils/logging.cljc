@@ -18,37 +18,27 @@
                       " | "
                       (name event))
                  error
-                 (clj->js
-                  {:ns (namespace event)
-                   :event (name event)
-                   :data (dissoc event-data :error)}))
+                 (clj->js (dissoc event-data :error)))
          (.debug ^js (.-logger firebase-functions)
                  (str (namespace event)
                       " | "
                       (name event)
                       (when-let [value (-> event-data :value)]
                         (str " = " value)))
-                 (clj->js
-                  {:ns (namespace event)
-                   :event (name event)
-                   :data event-data})))
+                 (clj->js event-data)))
        (catch :default err
+         (.error ^js (.-logger firebase-functions)
+                 "Logging failed:" err)
          (if-let [error (-> event-data :error)]
            (.error ^js (.-logger firebase-functions)
                    (str (namespace event)
                         " | "
                         (name event))
-                   error
-                   (clj->js
-                    {:ns (namespace event)
-                     :event (name event)}))
+                   (str error))
            (.debug ^js (.-logger firebase-functions)
                    (str (namespace event)
                         " | "
-                        (name event))
-                   (clj->js
-                    {:ns (namespace event)
-                     :event (name event)})))))))
+                        (name event))))))))
 
 (defn log-with-println [event event-data]
   (println event (when event-data (with-out-str (pprint/pprint event-data)))))
@@ -59,8 +49,12 @@
              (if (-> event-data :error)
                (js/console.error (str (namespace event) "/" (name event))
                                  (clj->js event-data))
-               (js/console.log (str (namespace event) "/" (name event))
-                               (clj->js event-data)))
+               (if-let [value (-> event-data :value)]
+                 (js/console.log (str (namespace event) "/" (name event))
+                                 (clj->js value)
+                                 (clj->js event-data))
+                 (js/console.log (str (namespace event) "/" (name event))
+                                 (clj->js event-data))))
              (js/console.log (str (namespace event) "/" (name event))))))
 
 ;;; log macro
