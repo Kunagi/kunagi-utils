@@ -124,7 +124,7 @@
              js/console
              ~event-expr
              ~css--ns ~css--event
-             (str ~value)
+             ~value
              ~@(when exception [css--exception "\n" exception "\n"])
              ~@[event-data])
            `(.log
