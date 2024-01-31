@@ -5,7 +5,8 @@
    #?(:cljs [cljs.pprint :as pprint]
       :clj [clojure.pprint :as pprint])
    [clojure.string :as str]
-   [flatland.ordered.map :as ordered.map]))
+   [flatland.ordered.map :as ordered.map]
+   [kunagi.utils :as u]))
 
 ;;; logging
 
@@ -124,15 +125,15 @@
              js/console
              ~event-expr
              ~css--ns ~css--event
-             ~value
+             (u/->edn ~value)
              ~@(when exception [css--exception "\n" exception "\n"])
-             ~@[event-data])
+             (u/->edn ~@[event-data]))
            `(.log
              js/console
              ~event-expr
              ~css--ns ~css--event
              ~@(when exception [css--exception "\n" exception "\n"])
-             ~@[event-data])))
+             (u/->edn ~@[event-data]))))
 
                                         ; else
        `(log-with-console ~event ~event-data)
