@@ -143,6 +143,11 @@
 
 ;; * try>
 
+(defn promise? [thing]
+  (when thing
+    (or #?(:cljs (instance? js/Promise thing))
+        (p/promise? thing))))
+
 #?(:clj
    (defmacro try> [expr & [catch-f]]
      (let [expr-code (->edn expr)
