@@ -1,14 +1,21 @@
 {:paths ["src"]
  :deps  {
+
+         ;; https://github.com/clojure/clojure
          org.clojure/clojure {:mvn/version "1.11.1"}
+
+         ;; https://github.com/clojure/clojurescript
          org.clojure/clojurescript {:mvn/version "1.11.60"}
 
          ;; io.github.kunagi/kunagi-build {:git/sha "79bf7fc4e252d62cdbe013471103c4a73f3320dd"}
          ;; io.github.kunagi/kunagi-build {:local/root "../kunagi-build"}
          ;;
 
-         funcool/promesa {:mvn/version "10.0.594"}
-         org.flatland/ordered {:mvn/version "1.15.10"}
+         ;; https://github.com/funcool/promesa
+         funcool/promesa {:mvn/version "11.0.678"}
+
+         ;; https://github.com/clj-commons/ordered
+         org.flatland/ordered {:mvn/version "1.15.11"}
 
          ;;
          }
@@ -24,12 +31,15 @@
                  }
           :ns-default build}
 
-  :test {:extra-deps {lambdaisland/kaocha {:mvn/version "1.66.1034"}}
+  :test {:extra-deps {
+                      ;; https://github.com/lambdaisland/kaocha
+                      lambdaisland/kaocha {:mvn/version "1.87.1366"}
+                      }
          :main-opts ["-m" "kaocha.runner"]}
 
   :shadow-cljs
-  {:extra-deps  {thheller/shadow-cljs {:mvn/version "2.22.6"}
-                 binaryage/devtools   {:mvn/version "1.0.4"}
+  {:extra-deps  {thheller/shadow-cljs {:mvn/version "2.26.7"}
+                 binaryage/devtools   {:mvn/version "RELEASE"}
                  cider/cider-nrepl    {:mvn/version "RELEASE"}
                  refactor-nrepl/refactor-nrepl {:mvn/version "RELEASE"}}
    :main-opts   ["-m" "shadow.cljs.devtools.cli"]}
