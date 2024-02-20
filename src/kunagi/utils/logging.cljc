@@ -125,15 +125,15 @@
              js/console
              ~event-expr
              ~css--ns ~css--event
-             (u/->edn ~value)
+             (cljs.core/clj->js ~value)
              ~@(when exception [css--exception "\n" exception "\n"])
-             (u/->edn ~@[event-data]))
+             (cljs.core/clj->js ~@[event-data]))
            `(.log
              js/console
              ~event-expr
              ~css--ns ~css--event
              ~@(when exception [css--exception "\n" exception "\n"])
-             (u/->edn ~@[event-data]))))
+             (cljs.core/clj->js ~@[event-data]))))
 
                                         ; else
        `(log-with-console ~event ~event-data)
